@@ -1,5 +1,34 @@
 version: '3.8'
 services:
+  customer-service:
+    build:
+      dockerfile: customer-service/Dockerfile
+    container_name: customer-service
+    ports:
+      - "30000:30000"
+    networks:
+      - amasunet
+    depends_on:
+      - my-postgres
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://my-postgres:5432/postgres"
+#      - SPRING_PROFILES_ACTIVE=docker
+
+  fraud-service:
+    build:
+      dockerfile: fraud-service/Dockerfile
+    container_name: fraud-service
+    ports:
+      - "30001:30001"
+    networks:
+      - amasunet
+    depends_on:
+      - my-postgres
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://my-postgres:5432/postgres"
+#      - SPRING_PROFILES_ACTIVE=docker
+
+
   my-postgres:
     image: postgres
     container_name: postgres

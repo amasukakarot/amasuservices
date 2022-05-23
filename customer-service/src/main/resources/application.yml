@@ -15,7 +15,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
-
-#app:
-#  url: 'http://localhost:30001/'
+helloMessage: "Hello!"
+app:
+  url: http://fraud-service:30001/api/v1/fraud-check/
 

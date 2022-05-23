@@ -19,6 +19,9 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final RestTemplate restTemplate;
 
+    @Value("${app.url}")
+    private String appUrl;
+
     public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer.builder()
                 .firstName(customerRegistrationRequest.firstName())
@@ -26,8 +29,8 @@ public class CustomerService {
                 .email(customerRegistrationRequest.email())
                 .build();
 
-
-
+//        log.info("appurl: {}", appUrl);
+        log.info("here {}", customer);
         // todo: check if email valid
         // todo: check if email is not taken
         // todo: store customer in db
@@ -40,8 +43,10 @@ public class CustomerService {
     }
 
     private boolean checkIfCustomerIsFraudster(Integer customerId) {
+        String url = "http://fraud-service:30001/api/v1/fraud-check/";
+        log.info("url {}",url);
         FraudCheckResponse fraudCheckResponseResponse =
-                restTemplate.getForObject("http://localhost:30001/api/v1/fraud-check/" + customerId,FraudCheckResponse.class);
+                restTemplate.getForObject(url + customerId,FraudCheckResponse.class);
         if(!fraudCheckResponseResponse.isFraudster()) {
             return fraudCheckResponseResponse.isFraudster();
         } else {
