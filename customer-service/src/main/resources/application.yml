@@ -16,3 +16,6 @@ spring:
         format_sql: true
     show-sql: true
 
+#app:
+#  url: 'http://localhost:30001/'
+

@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
     volumes:
-      - postgres:/data/postgres #volume named-volume:location
+      - postgres_test:/data/postgres #volume named-volume:location
     ports:
       - "5432:5432"
     networks:
@@ -23,6 +23,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
+      #volume host name : path where pgadmin persists its data
       - pgadmin:/var/lib/pgadmin
     ports:
       - "5050:80"
@@ -36,5 +37,6 @@ networks:
 
 #list all volumes on service level
 volumes:
-  postgres:
+  #name of volume
+  postgres_test:
   pgadmin:

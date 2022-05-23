@@ -1,8 +1,8 @@
 server:
-  port: 30000
+  port: 30001
 spring:
   application:
-    name: customer-service
+    name: fraud-service
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: 'amasu'
@@ -15,7 +15,4 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
-
-#app:
-#  url: 'http://localhost:30001/'
 
