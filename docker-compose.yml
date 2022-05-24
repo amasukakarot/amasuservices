@@ -2,7 +2,8 @@ version: '3.8'
 services:
   customer-service:
     build:
-      dockerfile: customer-service/Dockerfile
+      context: .
+      dockerfile: /customer-service/Dockerfile
     container_name: customer-service
     ports:
       - "30000:30000"
@@ -11,12 +12,12 @@ services:
     depends_on:
       - my-postgres
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://my-postgres:5432/postgres"
-#      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=docker
 
   fraud-service:
     build:
-      dockerfile: fraud-service/Dockerfile
+      context: .
+      dockerfile: /fraud-service/Dockerfile
     container_name: fraud-service
     ports:
       - "30001:30001"
@@ -25,9 +26,7 @@ services:
     depends_on:
       - my-postgres
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://my-postgres:5432/postgres"
-#      - SPRING_PROFILES_ACTIVE=docker
-
+      - SPRING_PROFILES_ACTIVE=docker
 
   my-postgres:
     image: postgres
@@ -37,7 +36,7 @@ services:
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
     volumes:
-      - postgres_test:/data/postgres #volume named-volume:location
+      - postgres_volume:/data/postgres #volume named-volume:location
     ports:
       - "5432:5432"
     networks:
@@ -67,5 +66,5 @@ networks:
 #list all volumes on service level
 volumes:
   #name of volume
-  postgres_test:
+  postgres_volume:
   pgadmin:

@@ -5,22 +5,21 @@ import com.amasu.customer.model.Customer;
 import com.amasu.customer.model.CustomerRegistrationRequest;
 import com.amasu.customer.model.FraudCheckResponse;
 import com.amasu.customer.repository.CustomerRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@AllArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final RestTemplate restTemplate;
 
     @Value("${app.url}")
-    private String appUrl;
+    private String fraudServiceUrl;
 
     public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer.builder()
@@ -29,24 +28,22 @@ public class CustomerService {
                 .email(customerRegistrationRequest.email())
                 .build();
 
-//        log.info("appurl: {}", appUrl);
-        log.info("here {}", customer);
+        log.info("customer {}", customer);
+        customerRepository.saveAndFlush(customer);
+        checkIfCustomerIsFraudster(customer.getId());
+
         // todo: check if email valid
         // todo: check if email is not taken
         // todo: store customer in db
-        customerRepository.saveAndFlush(customer);
         // todo: check if fraudster
         // todo: send notification
-
-        checkIfCustomerIsFraudster(customer.getId());
 
     }
 
     private boolean checkIfCustomerIsFraudster(Integer customerId) {
-        String url = "http://fraud-service:30001/api/v1/fraud-check/";
-        log.info("url {}",url);
+        log.info("url {}",fraudServiceUrl);
         FraudCheckResponse fraudCheckResponseResponse =
-                restTemplate.getForObject(url + customerId,FraudCheckResponse.class);
+                restTemplate.getForObject(fraudServiceUrl + customerId,FraudCheckResponse.class);
         if(!fraudCheckResponseResponse.isFraudster()) {
             return fraudCheckResponseResponse.isFraudster();
         } else {
